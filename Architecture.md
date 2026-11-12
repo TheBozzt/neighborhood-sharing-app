@@ -3,7 +3,7 @@
 
 | Element | Technologia |
 | --- | --- |
-| Aplikacja mobilna | Kotlin 
+| Aplikacja mobilna | Kotlin |
 | Serwer aplikacyjny | Kotlin, Spring Boot |
 | Baza danych | PostgreSQL |
 | Magazyn zdjęć | Blob - PostgreSQL |
@@ -46,3 +46,22 @@ Wszystkie ścieżki z prefiksem `/api`. Kolumna „Rola”: G – gość, M – 
 
 
 ---
+
+## Diagram Kontenerów:
+```mermaid
+flowchart LR
+    subgraph tel["Telefon z Androidem"]
+        app["Aplikacja mobilna, aparat"]
+    end
+
+    subgraph vm["Docker Compose"]
+        backend["Backend<br/>Kotlin, Spring Boot<br/>REST API, logika, JWT"]
+        pg[("PostgreSQL<br/>dane + zdjęcia (blob)")]
+    end
+
+    fcm["Firebase Cloud Messaging<br/>(usługa zewnętrzna)"]
+
+    app -- "Endpoints<br/>/api/**, JWT" --> backend
+    backend -- "JDBC<br/>(sieć Docker)" --> pg
+    backend -- "FCM " --> fcm
+    fcm -. "powiadomienia push" .-> app
