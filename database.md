@@ -238,7 +238,7 @@ W modelu logicznym zaplanowano następujące mechanizmy bazodanowe dla spójnoś
 ## 4. Przetwarzanie danych i specyfikacja technologiczna
 Reprezentacja i komunikacja z danymi trwałymi opiera się o następujący stos technologiczny:
 
-* **Baza danych:** Relacyjna baza danych **PostgreSQL (wersja 17)**, konfigurowana i uruchamiana w środowisku kontenerowym Docker.
+* **Baza danych:** Relacyjna baza danych **PostgreSQL (wersja 18)**, konfigurowana i uruchamiana w środowisku kontenerowym Docker.
 * **Architektura serwera:** Aplikacja backendowa zaimplementowana w technologii **Spring Boot** (język Kotlin).
 * **Komunikacja z bazą:** Połączenie z bazą odbywa się za pomocą natywnego protokołu **JDBC**.
 
