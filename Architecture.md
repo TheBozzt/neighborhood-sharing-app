@@ -24,7 +24,6 @@ Wszystkie ścieżki z prefiksem `/api`. Kolumna „Rola”: G – gość, M – 
 | `GET /przedmioty?q=&kategoria=&od=&do=` | katalog z wyszukiwaniem i filtrem dostępności | M |
 | `POST /przedmioty`, `PATCH /przedmioty/{id}`, `DELETE /przedmioty/{id}` | własne przedmioty, ukrywanie | M |
 | `GET /przedmioty/{id}/kalendarz?tydzien=` | zajęte i wolne godziny | M |
-| `POST /przedmioty/{id}/niedostepnosc` | okres niedostępności | M (właściciel) | U5 |
 | `POST /rezerwacje` | prośba o rezerwację | M |
 | `POST /rezerwacje/{id}/akceptacja`, `/odrzucenie`, `/anulowanie` | decyzja właściciela, anulowanie | M |
 | `POST /wypozyczenia/{id}/wydanie` | zdjęcia + wygenerowanie kodu QR wydania | M (właściciel) |
@@ -40,7 +39,6 @@ Wszystkie ścieżki z prefiksem `/api`. Kolumna „Rola”: G – gość, M – 
 | `GET, POST /ogloszenia`, `DELETE /ogloszenia/{id}` | tablica ogłoszeń, moderacja | M, Mod |
 | `POST /osiedla`, `PATCH /osiedla/{id}` | tworzenie i edycja osiedla | Mod |
 | `POST /osiedla/{id}/kody`, `DELETE /osiedla/{id}/kody/{kodId}`, `GET /osiedla/{id}/kody/{kodId}/pdf` | kody QR i zaproszenia | Mod |
-| `GET /osiedla/{id}/wnioski`, `POST /wnioski/{id}/decyzja` | wnioski o dołączenie | Mod |
 | `DELETE /osiedla/{id}/czlonkowie/{uzytkownikId}` | usunięcie użytkownika | Mod
 | `GET /osiedla/{id}/statystyki?od=&do=` | statystyki | Mod
 
