@@ -11,6 +11,7 @@ erDiagram
     OSIEDLE ||--o{ KOD_ZAPROSZENIA : "wydaje"
     OSIEDLE ||--o{ PRZEDMIOT : "posiada w katalogu"
     OSIEDLE ||--o{ OGLOSZENIE : "publikuje na tablicy"
+    KATEGORIA ||--o{ PRZEDMIOT : "klasyfikuje"
     UZYTKOWNIK ||--o{ PRZEDMIOT : "udostępnia"
     UZYTKOWNIK ||--o{ WYPOZYCZENIE : "uczestniczy (właściciel/pożyczający)"
     UZYTKOWNIK ||--o{ URZADZENIE : "otrzymuje powiadomienia na"
@@ -49,10 +50,12 @@ erDiagram
     URZADZENIE {
         Tekst token_fcm
     }
+    KATEGORIA {
+        Tekst nazwa
+    }
     PRZEDMIOT {
         Tekst nazwa
         Tekst opis_stanu
-        Tekst kategoria
         Tekst status_widocznosci
         Tekst status_archiwalny
         Lista_Zdjec zdjecia
@@ -105,6 +108,7 @@ erDiagram
     OSIEDLE ||--o{ KOD_ZAPROSZENIA : "wydaje"
     OSIEDLE ||--o{ PRZEDMIOT : "katalog"
     OSIEDLE ||--o{ OGLOSZENIE : "tablica"
+    KATEGORIA ||--o{ PRZEDMIOT : "klasyfikuje"
     UZYTKOWNIK ||--o{ PRZEDMIOT : "posiada"
     UZYTKOWNIK ||--o{ WYPOZYCZENIE : "pożycza"
     UZYTKOWNIK ||--o{ URZADZENIE : "tokeny push"
@@ -150,13 +154,17 @@ erDiagram
         bigint uzytkownik_id FK
         varchar token_fcm UK
     }
+    KATEGORIA {
+        bigint id PK
+        varchar nazwa UK
+    }
     PRZEDMIOT {
         bigint id PK
         bigint osiedle_id FK
         bigint wlasciciel_id FK
+        bigint kategoria_id FK
         varchar nazwa
         text opis_stanu
-        varchar kategoria
         boolean ukryty
         boolean archiwalny "soft-delete"
         text zdjecia_urls
@@ -227,9 +235,10 @@ W modelu logicznym zaplanowano następujące mechanizmy bazodanowe dla spójnoś
 | `KOD_ZAPROSZENIA` | `token_hash` | `UNIQUE` | Zabezpiecza przed duplikacją linków zaproszeń oraz jednorazowych kodów weryfikacyjnych. |
 | `KOD_POTWIERDZENIA` | `token_hash` | `UNIQUE` | Zapewnia kryptograficzną unikalność kodu QR wykorzystywanego do fizycznego potwierdzania wydania lub zwrotu sprzętu. |
 | `URZADZENIE` | `token_fcm` | `UNIQUE` | Unika duplikacji wysyłanych powiadomień push do tego samego urządzenia. |
+| `KATEGORIA` | `nazwa` | `UNIQUE` | Zapobiega duplikacji nazw kategorii w tabeli słownikowej i gwarantuje spójność klasyfikacji sprzętu w całym systemie. |
 | `OCENA` | `gwiazdki` | `CHECK` | Wymusza ograniczenie wartości w kolumnie wyłącznie do zakresu `1-5` na poziomie bazy. |
 | `WYPOZYCZENIE` | `okres` | `EXCLUDE` | Ograniczenie typu *Exclusion Constraint* zapobiegające nakładaniu się terminów na siebie dla jednego przedmiotu. |
-| `PRZEDMIOT` | `osiedle_id`, `kategoria` | `INDEX` (B-Tree) | Przyspiesza ładowanie i filtrowanie głównego katalogu sprzętu w aplikacji dla danego osiedla. |
+| `PRZEDMIOT` | `osiedle_id`, `kategoria_id` | `INDEX` (B-Tree) | Przyspiesza ładowanie i filtrowanie głównego katalogu sprzętu dla danego osiedla oraz złączenia z tabelą słownikową kategorii. |
 | `WYPOZYCZENIE` | `pozyczajacy_id`, `status` | `INDEX` (B-Tree) | Optymalizuje zapytania zwracające historię oraz trwające rezerwacje zalogowanego użytkownika. |
 | `WIADOMOSC` | `wypozyczenie_id`, `wyslana_at` | `INDEX` (B-Tree) | Przyspiesza chronologiczne ładowanie historii czatu dla konkretnego wypożyczenia. |
 
@@ -238,9 +247,6 @@ W modelu logicznym zaplanowano następujące mechanizmy bazodanowe dla spójnoś
 ## 4. Przetwarzanie danych i specyfikacja technologiczna
 Reprezentacja i komunikacja z danymi trwałymi opiera się o następujący stos technologiczny:
 
-* **Baza danych:** Relacyjna baza danych **PostgreSQL (wersja 18)**, konfigurowana i uruchamiana w środowisku kontenerowym Docker.
-* **Architektura serwera:** Aplikacja backendowa zaimplementowana w technologii **Spring Boot** (język Kotlin).
-* **Komunikacja z bazą:** Połączenie z bazą odbywa się za pomocą natywnego protokołu **JDBC**.
-
-
----
+- **Baza danych:** Relacyjna baza danych **PostgreSQL (wersja 18)**, konfigurowana i uruchamiana w środowisku kontenerowym Docker.
+- **Architektura serwera:** Aplikacja backendowa zaimplementowana w technologii **Spring Boot** (język Kotlin).
+- **Komunikacja z bazą:** Połączenie z bazą odbywa się za pomocą natywnego protokołu **JDBC**.
